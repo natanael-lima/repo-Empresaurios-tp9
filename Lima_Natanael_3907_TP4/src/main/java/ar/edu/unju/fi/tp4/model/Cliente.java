@@ -1,6 +1,8 @@
 package ar.edu.unju.fi.tp4.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.Valid;
@@ -66,21 +70,26 @@ public class Cliente {
 	@Column(name = "cli_codigoAreaTelefono")
 	@NotNull(message = "Debes introducir un codigo de area")
 	@Min(value=3,message="minimo 3 digitos")
-	
 	private int codigoAreaTelefono;
 	
 	@Column(name = "cli_nroTelefono")
 	@NotNull(message = "Debes introducir un numero de telofono")
 	@Min(value=6,message="minimo 6 digitos")
-	
 	private int nroTelefono;
-
 	
+
 	@Autowired
 	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name = "cuenta_id")
 	@Valid
 	private Cuenta cuenta;
+	
+	@ManyToMany
+	@JoinTable(name="clientes_beneficios", joinColumns= @JoinColumn(name="cli_codigo"),inverseJoinColumns =@JoinColumn(name="ben_id"))
+	@Valid
+	private List<Beneficio> beneficios = new ArrayList<Beneficio>();
+	
+	
 	
 	public Cuenta getCuenta() {
 		return cuenta;
@@ -96,23 +105,29 @@ public class Cliente {
 		
 	}
 
-
-	public Cliente(String tipoDocumento, int nroDocumento, String nombreApellido, String mail, String password,
-			LocalDate fechaNacimiento, int codigoAreaTelefono, int nroTelefono) {
+	public Cliente(long codigo, @NotEmpty(message = "Debes seleccionar un tipo") String tipoDocumento,
+			@NotNull(message = "Debes introducir un numero de documento") @Min(value = 1000000, message = "Numero no valido, mayor a 1.000.000") @Max(value = 100000000, message = "Numero no valid, menor a 100.000.000") int nroDocumento,
+			@NotEmpty(message = "Debes introducir un nombre y apellido") @Size(min = 6, max = 50, message = "Minimo 6 y Maximo 50 caracteres") String nombreApellido,
+			@Email(message = "No es un email valido") @NotEmpty(message = "Debes introducir un email") String mail,
+			@NotEmpty(message = "Debes introducir una contraseña") @Size(min = 6, max = 50, message = "Minimo 6 y Maximo 50 caracteres") String password,
+			@NotNull(message = "Debes introducir una fecha") LocalDate fechaNacimiento,
+			@NotNull(message = "Debes introducir un codigo de area") @Min(value = 3, message = "minimo 3 digitos") int codigoAreaTelefono,
+			@NotNull(message = "Debes introducir un numero de telofono") @Min(value = 6, message = "minimo 6 digitos") int nroTelefono,
+			@Valid Cuenta cuenta, @Valid List<Beneficio> beneficios) {
 		super();
+		this.codigo = codigo;
 		this.tipoDocumento = tipoDocumento;
 		this.nroDocumento = nroDocumento;
 		this.nombreApellido = nombreApellido;
 		this.mail = mail;
 		this.password = password;
 		this.fechaNacimiento = fechaNacimiento;
-
 		this.codigoAreaTelefono = codigoAreaTelefono;
 		this.nroTelefono = nroTelefono;
-
+		this.cuenta = cuenta;
+		this.beneficios = beneficios;
 	}
 
-	
 
 	public long getCodigo() {
 		return codigo;
@@ -202,7 +217,15 @@ public class Cliente {
 	public void setNroTelefono(int nroTelefono) {
 		this.nroTelefono = nroTelefono;
 	}
+	
+	public List<Beneficio> getBeneficios() {
+		return beneficios;
+	}
 
+
+	public void setBeneficios(List<Beneficio> beneficios) {
+		this.beneficios = beneficios;
+	}
 
 	@Override
 	public String toString() {
