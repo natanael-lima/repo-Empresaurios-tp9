@@ -46,6 +46,9 @@
 		              <td th:text="${cli.codigoAreaTelefono} + '-' + ${cli.nroTelefono}"></td>
 		              <td th:text="${cli.cuenta.saldo}"></td>
 		              <td th:text="${cli.cuenta.estado}"></td>
+		              <td><span th:each="ben: ${cli.beneficios}">
+                      <p th:text="${ben.descripshon}"></p>
+                      </span></td>
 		              
 		               <td><a th:href="@{/index/modificar/}+${cli.codigo}" class="btn btn-light my-2">Editar</a></td>
 		               <td><a th:href="@{/index/eliminar/}+${cli.codigo}" class="btn btn-light my-2">Eliminar</a></td> 
