@@ -86,7 +86,6 @@ public class Cliente {
 	
 	@ManyToMany
 	@JoinTable(name="clientes_beneficios", joinColumns= @JoinColumn(name="cli_codigo"),inverseJoinColumns =@JoinColumn(name="ben_id"))
-	@Valid
 	private List<Beneficio> beneficios = new ArrayList<Beneficio>();
 	
 	

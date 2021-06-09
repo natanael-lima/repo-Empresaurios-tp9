@@ -1,5 +1,7 @@
 package ar.edu.unju.fi.tp4.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -15,15 +17,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import ar.edu.unju.fi.tp4.model.Beneficio;
 import ar.edu.unju.fi.tp4.model.Cliente;
 import ar.edu.unju.fi.tp4.service.IClienteService;
 import ar.edu.unju.fi.tp4.service.ICuentaService;
+import ar.edu.unju.fi.tp4.service.imp.BeneficioServiceImp;
 
 @Controller
 public class ClienteController {
 
 	@Autowired
 	private Cliente cliente;
+	
+	@Autowired
+	@Qualifier("tableBeneficio")
+	private BeneficioServiceImp beneficioService;
 
 	@Autowired
 	@Qualifier("tableClienteRepository")
@@ -36,6 +44,7 @@ public class ClienteController {
 	@GetMapping("/index/cliente")
 	public String getPageMain(Model model) {
 		model.addAttribute(cliente);
+		model.addAttribute("beneficios",beneficioService.obtenerBeneficios());
 		return "nuevocliente";
 	}
 
@@ -45,9 +54,18 @@ public class ClienteController {
 		if(result.hasErrors()) {
 			model= new ModelAndView("nuevocliente");
 			model.addObject(cliente);
+			model.addObject("beneficios",beneficioService.obtenerBeneficios());
+			
 			return model;
 		}
 		else {
+			List<Beneficio> aux_bene=new ArrayList<Beneficio>();
+		    for(Beneficio ben: cliente.getBeneficios()) {
+		    	
+		    	aux_bene.add(beneficioService.buscarBeneficio(ben.getId()));
+		    	
+		    }
+		    cliente.setBeneficios(aux_bene);
 			clienteService.agregarCliente(cliente);
 			model= new ModelAndView("mostrarclientes");
 			model.addObject("clientes", clienteService.obtenerClientes());
@@ -81,8 +99,13 @@ public class ClienteController {
 	public ModelAndView getModificarCliente(@PathVariable(value = "id") int param) {
 		ModelAndView model = new ModelAndView("nuevocliente");
 		Optional<Cliente> cliente = clienteService.buscarCliente(param);
+		
 		model.addObject("cliente", cliente);
+		model.addObject("beneficios",beneficioService.obtenerBeneficios());
 		return model;
 	}
+	
+	// ------------------ TP9 ----------------
+	
 
 }
