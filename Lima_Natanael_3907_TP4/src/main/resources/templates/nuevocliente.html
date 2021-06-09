@@ -108,7 +108,7 @@
 
                             <ul>
                                <li th:each="ben: ${beneficios}"> 
-                                       <input type="checkbox" th:flied="*{beneficios}" th:value="${ben.id}" name="beneficios"> 
+                                       <input type="checkbox" th:field="*{beneficios}" th:value="${ben.id}"> 
                                        <label class="form-label" th:text="${ben.descripshon}"></label> 
                                </li>
                             </ul>
