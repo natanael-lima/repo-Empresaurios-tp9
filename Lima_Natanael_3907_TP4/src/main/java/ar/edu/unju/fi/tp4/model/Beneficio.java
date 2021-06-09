@@ -26,7 +26,7 @@ public class Beneficio {
 	@Column(name="ben_descripcion")
 	private String descripshon;
 	
-	@ManyToMany(mappedBy="cli_codigo")
+	@ManyToMany(mappedBy="beneficios")
 	private List<Cliente> clientes = new ArrayList<Cliente>();
 	
 	public Beneficio() {

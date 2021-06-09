@@ -24,6 +24,7 @@
 					   <form class="row g-3" th:action="@{/index/guardarcliente}" th:object="${cliente}" method="POST">
 					   <input type="hidden" th:field="*{codigo}">
 					   <input type="hidden" th:field="*{cuenta.id}">
+					   <input type="hidden" th:field="*{beneficios.id}">
 						    <div class="form-group col-md-6">
 						      <label for="inputState">Tipo Documento</label>
 						      <select id="tipoDocumento" class="form-control" th:field="*{tipoDocumento}">
@@ -42,6 +43,7 @@
 						    <input type="text"  th:field="*{nombreApellido}" class="form-control" id="inputAddress" placeholder="Pepito Perez" >
 						 	<small class="form-text text-danger" th:if="${#fields.hasErrors('nombreApellido')}" th:errors="*{nombreApellido}"></small>
 						  </div>
+					
 						  <div class="form-group col-12 col-md-6">
 						    <label for="mail" class="form-label">Ingrese E-mail</label>
 						    <input type="email"  th:field="*{mail}"  class="form-control" id="inputAddress" placeholder="facu@unju.com">
@@ -97,7 +99,8 @@
 							  </label>  
 							</div>
 						  <small class="form-text text-danger" th:if="${#fields.hasErrors('cuenta.estado')}" th:errors="*{cuenta.estado}"></small>
-						  
+						   
+						   <!-- Beneficios -->
 						  <div class="form-group col-12"><br>
 						    <button type="submit" class="btn btn-primary">Enviar</button>
 						  </div>
